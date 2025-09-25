@@ -217,7 +217,7 @@ These services are optional. The app runs locally without them. Enable as you gr
 To enable Gemini-based document analysis (classification, todos, entities), set:
 
 ```env
-GEMINI_API_KEY=AIzaSyB77ajkeupGgGhuUglwzynBzhE_SW8pQ2M
+GEMINI_API_KEY=
 ```
 
 The app will automatically use Gemini when this key is present; otherwise it falls back to local keyword/regex processing.
