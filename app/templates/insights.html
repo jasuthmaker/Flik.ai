@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar w-64 h-screen bg-white border-r" style="display:flex;flex-direction:column;background:#ffffff;border-right:1px solid #e5e7eb;border-radius:0;box-shadow:none;">
+    <!-- Logo -->
+    <div style="display:flex;align-items:center;padding:12px 24px;border-bottom:1px solid #e5e7eb;gap:8px;">
+      <img src="{{ url_for('static', filename='logo.svg') }}" alt="Flik.ai" style="height:20px;width:20px;"/>
+      <span style="font-weight:700;color:#4f46e5;">Flik.ai</span>
+    </div>
+
+    <!-- Main Nav -->
+    <nav style="flex:1;padding:24px 16px;display:flex;flex-direction:column;gap:8px;">
+      <a href="{{ url_for('main.index') }}"
+         class="category-item"
+         style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;transition:background-color 0.2s ease;color:#374151;"
+         onmouseover="this.style.backgroundColor='#f3f4f6'"
+         onmouseout="this.style.backgroundColor='transparent'">
+        <span>🏠</span>
+        <span>Dashboard</span>
+      </a>
+      <a href="{{ url_for('main.index') }}"
+         class="category-item"
+         style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;color:#374151;transition:background-color 0.2s ease;"
+         onmouseover="this.style.backgroundColor='#f3f4f6'"
+         onmouseout="this.style.backgroundColor='transparent'">
+        <span>📄</span>
+        <span style="flex:1;">Documents</span>
+      </a>
+      <a href="{{ url_for('main.todos') }}"
+         class="category-item"
+         style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;color:#374151;transition:background-color 0.2s ease;"
+         onmouseover="this.style.backgroundColor='#f3f4f6'"
+         onmouseout="this.style.backgroundColor='transparent'">
+        <span>✅</span>
+        <span style="flex:1;">Tasks</span>
+      </a>
+      <a href="{{ url_for('main.calendar') }}"
+         class="category-item"
+         style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;color:#374151;transition:background-color 0.2s ease;"
+         onmouseover="this.style.backgroundColor='#f3f4f6'"
+         onmouseout="this.style.backgroundColor='transparent'">
+        <span>📅</span>
+        <span>Calendar</span>
+      </a>
+      <a href="{{ url_for('main.insights') }}"
+         class="category-item active"
+         style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;background:#dbeafe;color:#2563eb;font-weight:600;transition:background-color 0.2s ease;">
+        <span>📊</span>
+        <span>Insights</span>
+      </a>
+    </nav>
+
+    <!-- Profile at bottom -->
+    <a href="{{ url_for('auth.profile') }}" style="margin-top:auto;border-top:1px solid #e5e7eb;padding:16px;display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;transition:background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='transparent'">
+      <div style="width:40px;height:40px;border-radius:9999px;background:#3b82f6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;">{{ current_user.get_initials() if current_user.is_authenticated else 'U' }}</div>
+      <div>
+        <p style="margin:0;font-size:14px;font-weight:600;">{{ current_user.get_full_name() if current_user.is_authenticated else 'User' }}</p>
+        <p style="margin:0;font-size:12px;color:#6b7280;">{{ current_user.email if current_user.is_authenticated else 'user@example.com' }}</p>
+      </div>
+    </a>
+  </aside>
+
+  <!-- Main Content -->
+  <section class="main-content">
+    <div class="dashboard-header">
+      <div>
+        <h2 style="margin:0">Insights & Analytics</h2>
+        <div style="color:var(--muted);font-size:14px;margin-top:2px">Track your productivity and document usage</div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <select id="timeRange" style="padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;" onchange="updateCharts()">
+          <option value="7">Last 7 days</option>
+          <option value="30" selected>Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last year</option>
+        </select>
+        <button onclick="exportData()" style="display:flex;align-items:center;gap:8px;padding:8px 16px;background:#3b82f6;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:500;transition:background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#2563eb'" onmouseout="this.style.backgroundColor='#3b82f6'">
+          <span>📊</span>
+          <span>Export Data</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+      <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:20px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:8px;">📄</div>
+        <div style="font-size:24px;font-weight:700;color:#3b82f6;">{{ total_docs }}</div>
+        <div style="color:#6b7280;font-size:14px;">Total Documents</div>
+      </div>
+      <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:20px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:8px;">📈</div>
+        <div style="font-size:24px;font-weight:700;color:#10b981;">{{ recent_uploads }}</div>
+        <div style="color:#6b7280;font-size:14px;">Recent Uploads</div>
+      </div>
+      <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:20px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:8px;">✅</div>
+        <div style="font-size:24px;font-weight:700;color:#f59e0b;">{{ completed_tasks }}</div>
+        <div style="color:#6b7280;font-size:14px;">Completed Tasks</div>
+      </div>
+      <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:20px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:8px;">🤖</div>
+        <div style="font-size:24px;font-weight:700;color:#8b5cf6;">{{ (total_docs * 0.8) | int }}</div>
+        <div style="color:#6b7280;font-size:14px;">AI Processed</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:24px;">
+      <!-- Upload Trends Chart -->
+      <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:20px;">
+        <h3 style="margin:0 0 16px 0;color:#374151;font-size:16px;font-weight:600;">Upload Trends</h3>
+        <canvas id="uploadChart" width="400" height="200"></canvas>
+      </div>
+
+      <!-- Document Types -->
+      <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:20px;">
+        <h3 style="margin:0 0 16px 0;color:#374151;font-size:16px;font-weight:600;">Document Types</h3>
+        <div id="documentTypesChart" style="height:200px;display:flex;flex-direction:column;justify-content:center;">
+          {% for file_type, count in docs_by_type %}
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f3f4f6;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:12px;height:12px;border-radius:50%;background:{{ ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'][loop.index0 % 5] }};"></div>
+              <span style="font-weight:500;">{{ file_type.upper() }}</span>
+            </div>
+            <span style="color:#6b7280;font-weight:600;">{{ count }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Categories and Task Analytics -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+      <!-- Document Categories -->
+      <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:20px;">
+        <h3 style="margin:0 0 16px 0;color:#374151;font-size:16px;font-weight:600;">Document Categories</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          {% for category, count in docs_by_category %}
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f9fafb;border-radius:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:{{ ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'][loop.index0 % 6] }};"></div>
+              <span style="font-weight:500;">{{ category or 'Uncategorized' }}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:60px;height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
+                <div style="width:{{ (count / total_docs * 100) if total_docs > 0 else 0 }}%;height:100%;background:{{ ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'][loop.index0 % 6] }};"></div>
+              </div>
+              <span style="color:#6b7280;font-weight:600;min-width:20px;">{{ count }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Task Analytics -->
+      <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:20px;">
+        <h3 style="margin:0 0 16px 0;color:#374151;font-size:16px;font-weight:600;">Task Analytics</h3>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="text-align:center;">
+            <div style="font-size:32px;font-weight:700;color:#3b82f6;">{{ total_tasks }}</div>
+            <div style="color:#6b7280;font-size:14px;">Total Tasks</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f0f9ff;border-radius:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#10b981;"></div>
+              <span style="font-weight:500;">Completed</span>
+            </div>
+            <span style="color:#10b981;font-weight:600;">{{ completed_tasks }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#fef3c7;border-radius:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;"></div>
+              <span style="font-weight:500;">Pending</span>
+            </div>
+            <span style="color:#f59e0b;font-weight:600;">{{ pending_tasks }}</span>
+          </div>
+          <div style="text-align:center;padding:12px;background:#f9fafb;border-radius:8px;">
+            <div style="font-size:18px;font-weight:600;color:#374151;">
+              {{ "%.1f"|format((completed_tasks / total_tasks * 100) if total_tasks > 0 else 0) }}%
+            </div>
+            <div style="color:#6b7280;font-size:12px;">Completion Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Timeline -->
+    <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:20px;">
+      <h3 style="margin:0 0 16px 0;color:#374151;font-size:16px;font-weight:600;">Recent Activity</h3>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#f9fafb;border-radius:8px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;"></div>
+          <div style="flex:1;">
+            <div style="font-weight:500;">Document uploaded</div>
+            <div style="color:#6b7280;font-size:12px;">2 hours ago</div>
+          </div>
+          <span style="color:#3b82f6;font-size:12px;font-weight:600;">PDF</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#f9fafb;border-radius:8px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#10b981;"></div>
+          <div style="flex:1;">
+            <div style="font-weight:500;">Task completed</div>
+            <div style="color:#6b7280;font-size:12px;">4 hours ago</div>
+          </div>
+          <span style="color:#10b981;font-size:12px;font-weight:600;">Appointment</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#f9fafb;border-radius:8px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;"></div>
+          <div style="flex:1;">
+            <div style="font-weight:500;">AI processing completed</div>
+            <div style="color:#6b7280;font-size:12px;">1 day ago</div>
+          </div>
+          <span style="color:#f59e0b;font-size:12px;font-weight:600;">Analysis</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+// Simple chart implementation using Canvas
+function drawUploadChart() {
+  const canvas = document.getElementById('uploadChart');
+  const ctx = canvas.getContext('2d');
+  const data = JSON.parse('{{ monthly_uploads | tojson | safe }}');
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  if (data.length === 0) return;
+  
+  const maxValue = Math.max(...data.map(d => d.count));
+  const padding = 40;
+  const chartWidth = canvas.width - padding * 2;
+  const chartHeight = canvas.height - padding * 2;
+  
+  // Draw axes
+  ctx.strokeStyle = '#e5e7eb';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, canvas.height - padding);
+  ctx.lineTo(canvas.width - padding, canvas.height - padding);
+  ctx.stroke();
+  
+  // Draw data line
+  ctx.strokeStyle = '#3b82f6';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  
+  data.forEach((point, index) => {
+    const x = padding + (index * chartWidth / (data.length - 1));
+    const y = canvas.height - padding - (point.count / maxValue * chartHeight);
+    
+    if (index === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  });
+  ctx.stroke();
+  
+  // Draw data points
+  ctx.fillStyle = '#3b82f6';
+  data.forEach((point, index) => {
+    const x = padding + (index * chartWidth / (data.length - 1));
+    const y = canvas.height - padding - (point.count / maxValue * chartHeight);
+    
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+    ctx.fill();
+  });
+  
+  // Draw labels
+  ctx.fillStyle = '#6b7280';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  data.forEach((point, index) => {
+    const x = padding + (index * chartWidth / (data.length - 1));
+    ctx.fillText(point.month, x, canvas.height - 10);
+  });
+}
+
+function updateCharts() {
+  // This would typically make an AJAX call to update data
+  // For now, just redraw the existing chart
+  drawUploadChart();
+}
+
+function exportData() {
+  const data = {
+    total_docs: {{ total_docs }},
+    recent_uploads: {{ recent_uploads }},
+    completed_tasks: {{ completed_tasks }},
+    pending_tasks: {{ pending_tasks }},
+    docs_by_type: JSON.parse('{{ docs_by_type | tojson | safe }}'),
+    docs_by_category: JSON.parse('{{ docs_by_category | tojson | safe }}'),
+    monthly_uploads: JSON.parse('{{ monthly_uploads | tojson | safe }}')
+  };
+  
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'insights-export.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Initialize charts when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  drawUploadChart();
+});
+</script>
+{% endblock %}

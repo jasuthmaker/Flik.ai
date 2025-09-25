@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+
+# Virtual env
+venv/
+.env
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editors/IDE
+.vscode/
+.idea/
+
+# Flask/SQLite
+flik_ai.db
+instance/
+
+# Logs
+*.log
+
+# Uploads: keep folder, ignore contents
+uploads/*
+!uploads/.gitkeep
+
+# Byte-compiled / cache
+.pytest_cache/
+
+# Node (if added later)
+node_modules/

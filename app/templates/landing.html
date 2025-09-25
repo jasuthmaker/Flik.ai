@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="landing-hero" style="padding:80px 0;background:linear-gradient(135deg,#3b82f6,#9333ea);color:white;text-align:center;">
+  <div style="max-width:900px;margin:auto;">
+    <h1 style="font-size:48px;font-weight:700;line-height:1.2;margin-bottom:16px;">Organize Every Document with AI</h1>
+    <p style="font-size:18px;opacity:0.9;margin-bottom:24px;">
+      Flik.ai lets you upload PDFs, images, and docs, extracts key text with AI, auto-categorizes them, and creates actionable to-dos from appointments and dates.
+    </p>
+    <div>
+      <a href="{{ url_for('auth.signup') }}" class="btn btn-primary" style="padding:12px 24px;font-size:18px;margin-right:8px;">Get Started</a>
+      <a href="{{ url_for('auth.login') }}" class="btn btn-secondary" style="padding:12px 24px;font-size:18px;background:white;color:#3b82f6;border:none;">Log In</a>
+    </div>
+  </div>
+
+  <!-- Hero Illustration -->
+  <div style="margin-top:40px;">
+    <img src="/static/illustrations/hero-docs.svg" alt="AI document illustration" style="max-width:600px;width:100%;margin:auto;">
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="section" style="padding:80px 0;background:#f9fafb;">
+  <h2 style="text-align:center;font-size:32px;font-weight:600;margin-bottom:40px;">Powerful Features</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;max-width:1100px;margin:auto;">
+    
+    <div class="feature-card" style="background:white;padding:24px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.05);text-align:center;transition:0.3s;">
+      <img src="/static/icons/upload.svg" width="48" style="margin-bottom:16px;" alt="Upload">
+      <h3>Smart Uploads</h3>
+      <p>Upload PDF, DOCX, TXT, PNG, JPG. Secure storage with instant previews.</p>
+    </div>
+
+    <div class="feature-card" style="background:white;padding:24px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.05);text-align:center;transition:0.3s;">
+      <img src="/static/icons/ai.svg" width="48" style="margin-bottom:16px;" alt="AI">
+      <h3>AI Extraction</h3>
+      <p>OCR, pdfplumber, and NLP extract and enrich text from your documents.</p>
+    </div>
+
+    <div class="feature-card" style="background:white;padding:24px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.05);text-align:center;transition:0.3s;">
+      <img src="/static/icons/folder.svg" width="48" style="margin-bottom:16px;" alt="Folder">
+      <h3>Auto Categorization</h3>
+      <p>Organized by Medical, Insurance, Finance, Legal, and more—instantly.</p>
+    </div>
+
+    <div class="feature-card" style="background:white;padding:24px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.05);text-align:center;transition:0.3s;">
+      <img src="/static/icons/calendar.svg" width="48" style="margin-bottom:16px;" alt="Calendar">
+      <h3>To-Dos & Appointments</h3>
+      <p>Surface due dates and tasks automatically, manage them in one place.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="section" style="padding:80px 0;background:white;">
+  <div style="max-width:800px;margin:auto;text-align:center;">
+    <h2 style="font-size:32px;font-weight:600;margin-bottom:24px;">How It Works</h2>
+    <ol style="text-align:left;max-width:500px;margin:auto;font-size:18px;color:#374151;">
+      <li>Upload your documents</li>
+      <li>AI extracts text, detects category, and finds appointments</li>
+      <li>Search and manage everything from your dashboard</li>
+    </ol>
+  </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="section" style="padding:80px 0;background:#f9fafb;">
+  <h2 style="text-align:center;font-size:32px;font-weight:600;margin-bottom:40px;">Simple Pricing</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;max-width:1000px;margin:auto;">
+    
+    <div class="pricing-card" style="background:white;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.05);padding:24px;text-align:center;">
+      <h3>Free</h3>
+      <p style="font-size:28px;font-weight:700;margin:12px 0;">$0<span style="font-size:14px;color:#6b7280;">/mo</span></p>
+      <ul style="list-style:none;padding:0;margin:0;color:#6b7280;text-align:left;">
+        <li>✔ Up to 50 uploads</li>
+        <li>✔ AI extraction (local)</li>
+        <li>✔ Search & categories</li>
+      </ul>
+      <a href="{{ url_for('auth.signup') }}" class="btn btn-primary" style="margin-top:16px;display:block;">Start Free</a>
+    </div>
+
+    <div class="pricing-card" style="background:linear-gradient(135deg,#3b82f6,#9333ea);color:white;border-radius:16px;box-shadow:0 6px 14px rgba(0,0,0,0.1);padding:24px;text-align:center;transform:scale(1.05);">
+      <h3>Pro</h3>
+      <p style="font-size:28px;font-weight:700;margin:12px 0;">$9<span style="font-size:14px;opacity:0.8;">/mo</span></p>
+      <ul style="list-style:none;padding:0;margin:0;text-align:left;opacity:0.9;">
+        <li>✔ Unlimited uploads</li>
+        <li>✔ Gemini-powered insights</li>
+        <li>✔ To-Dos & reminders</li>
+        <li>✔ Priority support</li>
+      </ul>
+      <a href="{{ url_for('auth.signup') }}" class="btn btn-secondary" style="margin-top:16px;display:block;background:white;color:#3b82f6;">Go Pro</a>
+    </div>
+
+    <div class="pricing-card" style="background:white;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.05);padding:24px;text-align:center;">
+      <h3>Business</h3>
+      <p style="font-size:28px;font-weight:700;margin:12px 0;">$29<span style="font-size:14px;color:#6b7280;">/mo</span></p>
+      <ul style="list-style:none;padding:0;margin:0;color:#6b7280;text-align:left;">
+        <li>✔ Team workspaces</li>
+        <li>✔ Shared tags & search</li>
+        <li>✔ Export & integrations</li>
+      </ul>
+      <a href="{{ url_for('auth.signup') }}" class="btn btn-secondary" style="margin-top:16px;display:block;">Contact Sales</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="section" style="padding:80px 0;background:linear-gradient(135deg,#9333ea,#3b82f6);color:white;text-align:center;">
+  <h2 style="font-size:36px;font-weight:700;margin-bottom:16px;">Ready to get organized?</h2>
+  <p style="font-size:18px;opacity:0.9;margin-bottom:24px;">Create a free account and start uploading in seconds.</p>
+  <a href="{{ url_for('auth.signup') }}" class="btn btn-primary" style="padding:14px 28px;font-size:18px;background:white;color:#3b82f6;">Create Free Account</a>
+</section>
+
+{% endblock %}

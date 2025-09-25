@@ -1,0 +1,34 @@
+{% extends "auth_base.html" %}
+{% block content %}
+  <h2 style="margin:0 0 12px 0;color:#111">Create your account</h2>
+  <p style="margin:0 0 18px 0;color:var(--muted)">Join Flik.ai to organize your documents</p>
+  <form method="post" class="auth-form">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div>
+        <label>First Name</label>
+        <input type="text" name="first_name" required class="auth-input" placeholder="Jane" />
+      </div>
+      <div>
+        <label>Last Name</label>
+        <input type="text" name="last_name" required class="auth-input" placeholder="Doe" />
+      </div>
+    </div>
+    <div style="margin-bottom:12px">
+      <label>Email</label>
+      <input type="email" name="email" required class="auth-input" placeholder="you@example.com" />
+    </div>
+    <div style="margin-bottom:12px">
+      <label>Password</label>
+      <input type="password" name="password" required class="auth-input" placeholder="••••••••" />
+    </div>
+    <div style="margin-bottom:16px">
+      <label>Confirm Password</label>
+      <input type="password" name="confirm" required class="auth-input" placeholder="••••••••" />
+    </div>
+    <button type="submit" class="btn btn-primary" style="width:100%">Sign Up</button>
+  </form>
+  <p style="margin-top:12px;color:var(--muted);text-align:center">
+    Already have an account?
+    <a href="{{ url_for('auth.login') }}">Log in</a>
+  </p>
+{% endblock %}

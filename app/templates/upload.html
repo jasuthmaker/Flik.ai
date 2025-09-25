@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="upload-container">
+    <h2>Upload a Document</h2>
+    <p class="upload-description">Upload PDFs, images, Word documents, or text files. We'll extract the text automatically.</p>
+    
+    <div class="upload-area">
+      <form method="post" enctype="multipart/form-data" class="upload-form">
+        <div class="file-input-wrapper">
+          <input type="file" name="file" id="file-input" required accept=".pdf,.png,.jpg,.jpeg,.docx,.txt">
+          <label for="file-input" class="file-label">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">
+              <strong>Choose a file</strong> or drag and drop
+            </div>
+            <div class="upload-subtext">
+              PDF, PNG, JPG, JPEG, DOCX, TXT (max 50MB)
+            </div>
+          </label>
+        </div>
+        <div class="upload-actions">
+          <button type="submit" class="btn btn-primary">Upload Document</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="supported-formats">
+      <h3>Supported Formats</h3>
+      <div class="format-list">
+        <div class="format-item">
+          <span class="format-icon">📄</span>
+          <span>PDF Documents</span>
+        </div>
+        <div class="format-item">
+          <span class="format-icon">🖼️</span>
+          <span>Images (PNG, JPG, JPEG)</span>
+        </div>
+        <div class="format-item">
+          <span class="format-icon">📝</span>
+          <span>Word Documents (DOCX)</span>
+        </div>
+        <div class="format-item">
+          <span class="format-icon">📄</span>
+          <span>Text Files (TXT)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

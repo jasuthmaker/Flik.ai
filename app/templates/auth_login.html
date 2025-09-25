@@ -1,0 +1,20 @@
+{% extends "auth_base.html" %}
+{% block content %}
+  <h2 style="margin:0 0 12px 0;color:#111">Welcome back</h2>
+  <p style="margin:0 0 18px 0;color:var(--muted)">Log in to your Flik.ai account</p>
+  <form method="post" class="auth-form">
+    <div style="margin-bottom:12px">
+      <label>Email</label>
+      <input type="email" name="email" required class="auth-input" placeholder="you@example.com" />
+    </div>
+    <div style="margin-bottom:12px">
+      <label>Password</label>
+      <input type="password" name="password" required class="auth-input" placeholder="••••••••" />
+    </div>
+    <button type="submit" class="btn btn-primary" style="width:100%">Log In</button>
+  </form>
+  <p style="margin-top:12px;color:var(--muted);text-align:center">
+    No account?
+    <a href="{{ url_for('auth.signup') }}">Sign up</a>
+  </p>
+{% endblock %}

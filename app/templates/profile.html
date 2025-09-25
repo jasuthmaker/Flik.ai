@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar w-64 h-screen bg-white border-r" style="display:flex;flex-direction:column;background:#ffffff;border-right:1px solid #e5e7eb;border-radius:0;box-shadow:none;">
+    <!-- Logo -->
+    <div style="display:flex;align-items:center;padding:12px 24px;border-bottom:1px solid #e5e7eb;gap:8px;">
+      <img src="{{ url_for('static', filename='logo.svg') }}" alt="Flik.ai" style="height:20px;width:20px;"/>
+      <span style="font-weight:700;color:#4f46e5;">Flik.ai</span>
+    </div>
+
+    <!-- Main Nav -->
+    <nav style="flex:1;padding:24px 16px;display:flex;flex-direction:column;gap:8px;">
+      <a href="{{ url_for('main.index') }}"
+         class="category-item"
+         style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;transition:background-color 0.2s ease;color:#374151;"
+         onmouseover="this.style.backgroundColor='#f3f4f6'"
+         onmouseout="this.style.backgroundColor='transparent'">
+        <span>🏠</span>
+        <span>Dashboard</span>
+      </a>
+      <a href="{{ url_for('main.index') }}"
+         class="category-item"
+         style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;color:#374151;transition:background-color 0.2s ease;"
+         onmouseover="this.style.backgroundColor='#f3f4f6'"
+         onmouseout="this.style.backgroundColor='transparent'">
+        <span>📄</span>
+        <span style="flex:1;">Documents</span>
+      </a>
+      <a href="{{ url_for('main.todos') }}"
+         class="category-item"
+         style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;color:#374151;transition:background-color 0.2s ease;"
+         onmouseover="this.style.backgroundColor='#f3f4f6'"
+         onmouseout="this.style.backgroundColor='transparent'">
+        <span>✅</span>
+        <span style="flex:1;">Tasks</span>
+      </a>
+      <a href="{{ url_for('main.calendar') }}"
+         class="category-item"
+         style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;color:#374151;transition:background-color 0.2s ease;"
+         onmouseover="this.style.backgroundColor='#f3f4f6'"
+         onmouseout="this.style.backgroundColor='transparent'">
+        <span>📅</span>
+        <span>Calendar</span>
+      </a>
+      <a href="{{ url_for('main.insights') }}"
+         class="category-item"
+         style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;color:#374151;transition:background-color 0.2s ease;"
+         onmouseover="this.style.backgroundColor='#f3f4f6'"
+         onmouseout="this.style.backgroundColor='transparent'">
+        <span>📊</span>
+        <span>Insights</span>
+      </a>
+    </nav>
+
+    <!-- Profile at bottom -->
+    <div style="margin-top:auto;border-top:1px solid #e5e7eb;padding:16px;display:flex;align-items:center;gap:12px;">
+      <div style="width:40px;height:40px;border-radius:9999px;background:#3b82f6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;">{{ current_user.get_initials() }}</div>
+      <div>
+        <p style="margin:0;font-size:14px;font-weight:600;">{{ current_user.get_full_name() }}</p>
+        <p style="margin:0;font-size:12px;color:#6b7280;">{{ current_user.email }}</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <section class="main-content">
+    <div class="dashboard-header">
+      <div>
+        <h2 style="margin:0">Profile Settings</h2>
+        <div style="color:var(--muted);font-size:14px;margin-top:2px">Manage your account information</div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <a href="{{ url_for('auth.edit_profile') }}" style="display:flex;align-items:center;gap:8px;padding:8px 16px;background:#3b82f6;color:white;border-radius:8px;text-decoration:none;font-weight:500;transition:background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#2563eb'" onmouseout="this.style.backgroundColor='#3b82f6'">
+          <span>✏️</span>
+          <span>Edit Profile</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Profile Information -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+      <!-- Personal Information -->
+      <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:24px;">
+        <h3 style="margin:0 0 20px 0;color:#374151;font-size:18px;font-weight:600;">Personal Information</h3>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div>
+            <label style="display:block;color:#6b7280;font-size:12px;font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">Full Name</label>
+            <div style="font-size:16px;font-weight:500;color:#111;">{{ current_user.get_full_name() }}</div>
+          </div>
+          <div>
+            <label style="display:block;color:#6b7280;font-size:12px;font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">Email Address</label>
+            <div style="font-size:16px;font-weight:500;color:#111;">{{ current_user.email }}</div>
+          </div>
+          <div>
+            <label style="display:block;color:#6b7280;font-size:12px;font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">Member Since</label>
+            <div style="font-size:16px;font-weight:500;color:#111;">{{ current_user.created_at.strftime('%B %d, %Y') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Statistics -->
+      <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:24px;">
+        <h3 style="margin:0 0 20px 0;color:#374151;font-size:18px;font-weight:600;">Account Statistics</h3>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f9fafb;border-radius:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;"></div>
+              <span style="font-weight:500;">Documents Uploaded</span>
+            </div>
+            <span style="color:#3b82f6;font-weight:600;">{{ total_documents }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f9fafb;border-radius:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#10b981;"></div>
+              <span style="font-weight:500;">Tasks Created</span>
+            </div>
+            <span style="color:#10b981;font-weight:600;">{{ total_todos }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f9fafb;border-radius:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;"></div>
+              <span style="font-weight:500;">Account Status</span>
+            </div>
+            <span style="color:#10b981;font-weight:600;">Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card" style="background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:24px;">
+      <h3 style="margin:0 0 20px 0;color:#374151;font-size:18px;font-weight:600;">Quick Actions</h3>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="{{ url_for('auth.edit_profile') }}" style="display:flex;align-items:center;gap:8px;padding:12px 16px;background:#3b82f6;color:white;border-radius:8px;text-decoration:none;font-weight:500;transition:background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#2563eb'" onmouseout="this.style.backgroundColor='#3b82f6'">
+          <span>✏️</span>
+          <span>Edit Profile</span>
+        </a>
+        <a href="{{ url_for('main.upload_file') }}" style="display:flex;align-items:center;gap:8px;padding:12px 16px;background:#10b981;color:white;border-radius:8px;text-decoration:none;font-weight:500;transition:background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#059669'" onmouseout="this.style.backgroundColor='#10b981'">
+          <span>📄</span>
+          <span>Upload Document</span>
+        </a>
+        <a href="{{ url_for('main.todos') }}" style="display:flex;align-items:center;gap:8px;padding:12px 16px;background:#f59e0b;color:white;border-radius:8px;text-decoration:none;font-weight:500;transition:background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#d97706'" onmouseout="this.style.backgroundColor='#f59e0b'">
+          <span>✅</span>
+          <span>Manage Tasks</span>
+        </a>
+        <a href="{{ url_for('auth.logout') }}" style="display:flex;align-items:center;gap:8px;padding:12px 16px;background:#ef4444;color:white;border-radius:8px;text-decoration:none;font-weight:500;transition:background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#dc2626'" onmouseout="this.style.backgroundColor='#ef4444'">
+          <span>🚪</span>
+          <span>Logout</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

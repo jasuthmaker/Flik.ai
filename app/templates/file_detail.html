@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="file-detail">
+    <div class="file-header">
+      <h2>{{ document.original_filename }}</h2>
+      <div class="file-actions">
+        <a href="{{ url_for('main.uploaded_file', filename=document.filename) }}" target="_blank" class="btn btn-secondary">View File</a>
+        <form method="POST" action="{{ url_for('main.delete_file', file_id=document.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this file?')">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="file-info">
+      <div class="info-grid">
+        <div class="info-item">
+          <label>File Type:</label>
+          <span class="file-type">{{ document.file_type.upper() }}</span>
+        </div>
+        <div class="info-item">
+          <label>File Size:</label>
+          <span>{{ document.file_size | format_file_size }}</span>
+        </div>
+        <div class="info-item">
+          <label>Upload Date:</label>
+          <span>{{ document.upload_date.strftime('%B %d, %Y at %I:%M %p') }}</span>
+        </div>
+        <div class="info-item">
+          <label>Text Extracted:</label>
+          <span class="status {{ 'success' if document.extracted_text else 'warning' }}">
+            {{ 'Yes' if document.extracted_text else 'No' }}
+          </span>
+        </div>
+        <div class="info-item">
+          <label>Category:</label>
+          <form method="POST" action="{{ url_for('main.update_category', file_id=document.id) }}" style="display: inline;">
+            <select name="category" onchange="this.form.submit()" class="category-select">
+              <option value="Medical" {{ 'selected' if document.category == 'Medical' else '' }}>🏥 Medical</option>
+              <option value="Dental" {{ 'selected' if document.category == 'Dental' else '' }}>🦷 Dental</option>
+              <option value="Pharmacy" {{ 'selected' if document.category == 'Pharmacy' else '' }}>💊 Pharmacy</option>
+              <option value="Insurance" {{ 'selected' if document.category == 'Insurance' else '' }}>🛡️ Insurance</option>
+              <option value="Finance" {{ 'selected' if document.category == 'Finance' else '' }}>💰 Finance</option>
+              <option value="ID" {{ 'selected' if document.category == 'ID' else '' }}>🆔 ID</option>
+              <option value="Legal" {{ 'selected' if document.category == 'Legal' else '' }}>⚖️ Legal</option>
+              <option value="Other" {{ 'selected' if document.category == 'Other' else '' }}>📄 Other</option>
+            </select>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {# Preview block #}
+    <div class="extracted-text">
+      <h3>Preview</h3>
+      <div class="text-content">
+        {% if document.file_type == 'pdf' %}
+          <iframe src="{{ url_for('main.uploaded_file', filename=document.filename) }}" style="width:100%;height:700px;border:none;" title="PDF preview"></iframe>
+        {% elif document.file_type in ['png','jpg','jpeg'] %}
+          <img src="{{ url_for('main.uploaded_file', filename=document.filename) }}" alt="Image preview" style="max-width:100%;height:auto;border-radius:8px;"/>
+        {% else %}
+          <p>No inline preview available for this file type. You can download and open the file.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

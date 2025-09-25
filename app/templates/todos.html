@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="todos-container">
+    <div class="todos-header">
+      <h2>📅 To-Dos & Appointments</h2>
+      <p>AI-extracted tasks and appointments from your documents</p>
+    </div>
+
+    {% if todos %}
+      <div class="todos-list">
+        {% for todo in todos %}
+          <div class="todo-item {{ 'completed' if todo.is_completed else '' }}">
+            <div class="todo-checkbox">
+              <input type="checkbox" 
+                     {{ 'checked' if todo.is_completed else '' }}
+                     onchange="toggleTodo({{ todo.id }})"
+                     class="todo-check">
+            </div>
+            
+            <div class="todo-content">
+              <div class="todo-header">
+                <h3 class="todo-title">{{ todo.title }}</h3>
+                <span class="todo-category">{{ todo.category }}</span>
+              </div>
+              
+              {% if todo.description %}
+                <p class="todo-description">{{ todo.description }}</p>
+              {% endif %}
+              
+              <div class="todo-meta">
+                {% if todo.due_date %}
+                  <span class="todo-date">📅 {{ todo.due_date.strftime('%B %d, %Y at %I:%M %p') }}</span>
+                {% endif %}
+                {% if todo.document %}
+                  <span class="todo-source">📄 From: {{ todo.document.original_filename }}</span>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="todo-actions">
+              <button onclick="deleteTodo({{ todo.id }})" class="btn btn-danger btn-sm">Delete</button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <h3>No tasks or appointments yet</h3>
+        <p>Upload documents with appointments or tasks to see them here automatically extracted by AI.</p>
+        <a href="{{ url_for('main.upload_file') }}" class="btn btn-primary">Upload Document</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <script>
+    function toggleTodo(todoId) {
+      fetch(`/toggle_todo/${todoId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const todoItem = document.querySelector(`input[onchange="toggleTodo(${todoId})"]`).closest('.todo-item');
+          if (data.is_completed) {
+            todoItem.classList.add('completed');
+          } else {
+            todoItem.classList.remove('completed');
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+
+    function deleteTodo(todoId) {
+      if (confirm('Are you sure you want to delete this todo?')) {
+        fetch(`/delete_todo/${todoId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      }
+    }
+  </script>
+{% endblock %}

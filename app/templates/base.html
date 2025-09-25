@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Flik.ai</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="topbar" style="padding:8px 24px;background:#ffffff;box-shadow:0 1px 2px rgba(0,0,0,0.05);">
+    <div class="container">
+      <h1 class="brand">
+        <a href="{{ url_for('main.index') }}" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+          <img src="{{ url_for('static', filename='logo.svg') }}" alt="Flik.ai" style="height:24px;width:24px;display:inline-block;"/>
+          <span>Flik.ai</span>
+        </a>
+      </h1>
+      <nav style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <a href="{{ url_for('main.index') }}">Dashboard</a>
+        <a href="{{ url_for('main.upload_file') }}">Upload</a>
+        <a href="{{ url_for('main.todos') }}">To-Dos & Appointments</a>
+        <div style="flex:1"></div>
+        {% if current_user.is_authenticated %}
+          <form action="{{ url_for('main.index') }}" method="get" style="display:flex;align-items:center;gap:8px;">
+            <input name="search" class="search-input" placeholder="Search documents..." />
+          </form>
+          <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">Logout</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="messages">
+          {% for category, msg in messages %}
+            <div class="message {{ category }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container">Flik.AI — Jaswanth Dorairaj @ JD Creations</div>
+  </footer>
+</body>
+</html>
